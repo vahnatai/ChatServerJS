@@ -73,16 +73,20 @@
 		}, 'json');
     }
 	
-	function refreshHistory() {
+	function refreshHistory(callback) {
 		getMessages(function (messages) {
 			history = messages;
+            var messagesString = "";
+            for (var key in history) {
+                var prepend = (messagesString ? '\n' : ''); //prepend newline for all but first message
+                var message = history[key];
+                messagesString += prepend + message.sender + ': ' + message.body;
+            };
+            $('#historyArea').html(messagesString);
+            if (callback) {
+                callback(messages);
+            }
 		});
-		var messagesString = "";
-        for (var key in history) {
-            var message = history[key];
-			messagesString += message.sender + ': ' + message.body + '\n';
-		};
-		$('#historyArea').html(messagesString);
 	}
 	
     // get an old or new username 
@@ -102,15 +106,20 @@
     
     
 	$(document).ready(function() {
+        function scrollHistoryToEnd() {
+            var $history = $('#historyArea');
+            $history.scrollTop($history[0].scrollHeight - $history.height());
+            $('#inputField').focus();
+        }
+    
         function triggerSend() {
             var messageBody = $('#inputField').val();
             $('#inputField').val('');
 			var message = new Message(currentUser, messageBody, new Date().getTime());
 			sendMessage(message);
-			refreshHistory();
-            $('#inputField').focus();
+			refreshHistory(scrollHistoryToEnd);
         }
-		$('#sendButton').click(function(){
+		$('#sendButton').click(function() {
 			triggerSend();
 		});
         $('#inputField').keypress(function (event) {
@@ -119,6 +128,7 @@
             }
         });
         
+        refreshHistory(scrollHistoryToEnd);
         setInterval(refreshHistory, 250);
 	});
 //})();
