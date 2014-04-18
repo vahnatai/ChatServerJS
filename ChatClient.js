@@ -1,4 +1,5 @@
-(function() {
+//(function() {
+    var currentUser;
 	var history = [];
 	/**
 	 *  Make one class extend another.
@@ -28,9 +29,10 @@
 	/**
 	 *	Message class.
 	 */
-	function Message(sender, body) {
+	function Message(sender, body, date) {
 		this.sender = sender;
 		this.body = body;
+        this.date = date;
 	}
 	
 	/**
@@ -38,7 +40,6 @@
 	 */
 	function sendMessage(message) {
 		$.post('./cgi/addMessage', JSON.stringify(message), function(data, status) {
-			console.log(status);
 		});
 	}
 	
@@ -46,30 +47,78 @@
 	 *	Get messages from the server.
 	 */
 	function getMessages(callback) {
-		$.post('./cgi/getMessages', function(data) {
-			console.log(messages);
-			var messages = JSON.parse(data);
+		$.post('./cgi/getMessages', function(messages) {
 			callback(messages);
 		}, 'json');
 	}
+    
+	/**
+	 *	Get the current user for this address, if exists.
+	 */
+	function getCurrentUser(callback) {
+		$.post('./cgi/getCurrentUser', function(data) {
+			callback(data.user);
+		}, 'json');
+	}
+    
+    /**
+     *  Attempt to create a new user associated with this address.
+     */
+    function createNewUser(username, callback) {
+        var sendData = {username: username};
+        $.post('./cgi/createNewUser', JSON.stringify(sendData), function(data) {
+            //TODO
+			
+			callback(data);
+		}, 'json');
+    }
 	
 	function refreshHistory() {
 		getMessages(function (messages) {
 			history = messages;
 		});
 		var messagesString = "";
-		history.forEach(function(message) {
+        for (var key in history) {
+            var message = history[key];
 			messagesString += message.sender + ': ' + message.body + '\n';
-		});
+		};
 		$('#historyArea').html(messagesString);
 	}
 	
+    // get an old or new username 
+    getCurrentUser(function(username) {
+        if (!username) {
+            var desiredName;
+            while (!desiredName) {
+                desiredName = prompt('No username associated with this address. Please indicate desired nickname:');
+            }
+            createNewUser(desiredName, function(data) {
+                currentUser = data.username;
+            });
+            return;
+        }
+        currentUser = username;
+    });
+    
+    
 	$(document).ready(function() {
-		$('#sendButton').click(function(){
-			console.log('test');
-			var message = new Message('a', 'test');
+        function triggerSend() {
+            var messageBody = $('#inputField').val();
+            $('#inputField').val('');
+			var message = new Message(currentUser, messageBody, new Date().getTime());
 			sendMessage(message);
 			refreshHistory();
+            $('#inputField').focus();
+        }
+		$('#sendButton').click(function(){
+			triggerSend();
 		});
+        $('#inputField').keypress(function (event) {
+            if (event.which == 13) {
+                triggerSend();
+            }
+        });
+        
+        setInterval(refreshHistory, 250);
 	});
-})();
+//})();
