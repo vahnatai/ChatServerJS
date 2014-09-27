@@ -75,11 +75,10 @@
 	
 	function refreshHistory(callback) {
 		getMessages(function (messages) {
-			history = messages;
             var messagesString = "";
-            for (var key in history) {
+            for (var key in messages) {
                 var prepend = (messagesString ? '\n' : ''); //prepend newline for all but first message
-                var message = history[key];
+                var message = messages[key];
                 messagesString += prepend + message.sender + ': ' + message.body;
             };
             $('#historyArea').html(messagesString);
