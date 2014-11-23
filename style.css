@@ -1,7 +1,8 @@
 html, body {
-	width: 100%;
+	margin: 0;
+	padding: 0;
 	height: 100%;
-	overflow: hidden;
+	width: 100%; 
 }
 
 body {
@@ -10,22 +11,46 @@ body {
 }
 
 #chatContainer {
-	width: 98%;
-	height: 98%;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+	/*-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;*/
+}
+
+#chatStatusContainer {
+	flex: 1;
+
+	display: flex;
+	flex-direction: row;
 }
 
 #historyArea {
-	width: 100%;
-	height: calc(100% - 40px);
+	flex: 1;
+	width: auto;
+	display: block;
+	resize: none;
+}
+
+#chatterList {
+	width: 157px;
 	display: block;
 }
 
 #controlsContainer {
+	display: flex;
+	flex-direction: row;
 	width: 100%;
 }
 
 #inputField {
-	width: calc(100% - 54px);
+	flex: 1;
+	width: auto;
 }
 
 #sendButton {
