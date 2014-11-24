@@ -1,46 +1,31 @@
 //(function() {
+    var chatApp = angular.module('chatApp', []);
+
+    chatApp.controller('ChatController', function($scope) {
+
+        $scope.debugIt = function() {
+            console.debug($scope);
+        };
+    });
+
     var currentUser;
 	var history = [];
-	/**
-	 *  Make one class extend another.
-	 *
-	 *  @param base {function} Base class constructor.
-	 *  @param sub {function} Sub-class constructor.
-	 */
-	function extend(base, sub, properties) {
-		sub.prototype = Object.create(base.prototype);
-		sub.prototype.constructor = sub;
-		Object.defineProperty(sub.prototype, 'constructor', { 
-			enumerable: false, 
-			value: sub 
-		});
-		if (typeof properties !== 'undefined' && properties) {
-			for (var propName in properties) {
-				sub.prototype[propName] = properties[propName];
-				Object.defineProperty(sub.prototype, propName, { 
-					enumerable: true, 
-					value: properties[propName]
-				});
-			}
-		}
-		sub.prototype._super = base;
-	}
-	
-	/**
-	 *	Message class.
-	 */
-	function Message(sender, body, date) {
-		this.sender = sender;
-		this.body = body;
-        this.date = date;
-	}
 	
 	/**
 	 *	Send a message to the server.
 	 */
-	function sendMessage(message) {
-		$.post('./cgi/addMessage', JSON.stringify(message), function(data, status) {
-		});
+	function sendMessage(sender, body, date) {
+		$.post(
+            './cgi/addMessage',
+            JSON.stringify({
+                sender: sender,
+                body: body,
+                date: date
+            }),
+            function(data, status) {
+
+            }
+        );
 	}
 	
 	/**
@@ -114,8 +99,7 @@
         function triggerSend() {
             var messageBody = $('#inputField').val();
             $('#inputField').val('');
-			var message = new Message(currentUser, messageBody, new Date().getTime());
-			sendMessage(message);
+			sendMessage(currentUser, messageBody, new Date().getTime());
 			refreshHistory(scrollHistoryToEnd);
         }
 		$('#sendButton').click(function() {
