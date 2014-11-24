@@ -34,6 +34,11 @@
 	        response.setHeader('content-type', 'application/json');
 	        response.end(JSON.stringify({user: user}));
 	    },
+        
+        '/cgi/getActiveUsers': function request_getActiveUsers(request, response) {
+            response.setHeader('content-type', 'application/json');
+            response.end(JSON.stringify({users: users}));
+        },
 		
 	    '/cgi/createNewUser': function request_createNewUser(request, response) {
 	        var body = '';

@@ -2,16 +2,9 @@
     var chatApp = angular.module('chatApp', []);
 
     chatApp.controller('ChatController', function($scope) {
-
-        $scope.debugIt = function() {
-            console.debug($scope);
-        };
-
-
-        ////////////////////////
-
         $scope.currentUser = null;
     	$scope.history = [];
+        $scope.users = [];
     	
     	/**
     	 *	Send a message to the server.
@@ -39,14 +32,23 @@
     		}, 'json');
     	};
         
-    	/**
-    	 *	Get the current user for this address, if exists.
-    	 */
-    	$scope.getCurrentUser = function getCurrentUser(callback) {
-    		$.post('./cgi/getCurrentUser', function(data) {
-    			callback(data.user);
-    		}, 'json');
-    	};
+        /**
+         *  Get the current user for this address, if exists.
+         */
+        $scope.getCurrentUser = function getCurrentUser(callback) {
+            $.post('./cgi/getCurrentUser', function(data) {
+                callback(data.user);
+            }, 'json');
+        };
+        
+        /**
+         *  Get the current user for this address, if exists.
+         */
+        $scope.getActiveUsers = function getActiveUsers(callback) {
+            $.post('./cgi/getActiveUsers', function(data) {
+                callback(data.users);
+            }, 'json');
+        };
         
         /**
          *  Attempt to create a new user associated with this address.
@@ -75,6 +77,13 @@
                 }
     		});
     	};
+
+        $scope.refreshUsers = function refreshUsers() {
+            $scope.getActiveUsers(function (users) {
+                $scope.users = users;
+                $scope.$apply();
+            });
+        };
     	
         // get an old or new username 
         $scope.getCurrentUser(function(username) {
@@ -85,10 +94,12 @@
                 }
                 $scope.createNewUser(desiredName, function(data) {
                     $scope.currentUser = data.username;
+                    $scope.refreshUsers();
                 });
                 return;
             }
             $scope.currentUser = username;
+            $scope.refreshUsers();
         });
         
         

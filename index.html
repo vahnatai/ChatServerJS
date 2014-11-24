@@ -9,16 +9,11 @@
     </head>
     
     <body ng-app="chatApp">
-        <div id="chatContainer" ng-controller="ChatController as chat" ng-init="init();"> 
+        <div id="chatContainer" ng-controller="ChatController as chat" ng-init="init()"> 
             <div id="chatStatusContainer">
     			<textarea id="historyArea" readonly rows="10">LOADING...</textarea>
                 <select multiple id="chatterList">
-                    <option value="">ff</option>
-                    <option value="">ff</option>
-                    <option value="">ff</option>
-                    <option value="">ff</option>
-                    <option value="">ff</option>
-                    <option value="">ff</option>
+                    <option value="{{user}}" ng-repeat="user in users">{{user}}</option>
                 </select>
             </div>
 			<div id="controlsContainer">
