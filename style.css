@@ -78,5 +78,5 @@ body {
 }
 
 .message:nth-child(odd) .body {
-	background-color: rgb(180, 180, 230);
+	background-color: rgb(230, 230, 255);
 }
