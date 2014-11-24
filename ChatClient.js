@@ -3,7 +3,7 @@
 
     chatApp.controller('ChatController', function($scope) {
         $scope.currentUser = null;
-    	$scope.history = [];
+    	$scope.messages = [];
         $scope.users = [];
     	
     	/**
@@ -64,14 +64,8 @@
     	
     	$scope.refreshHistory = function refreshHistory(callback) {
     		$scope.getMessages(function (messages) {
-                var messagesString = "";
-                for (var key in messages) {
-                    var prepend = (messagesString ? '\n' : ''); //prepend newline for all but first message
-                    var message = messages[key];
-                    $scope.history = messages;
-                    messagesString += prepend + message.sender + ': ' + message.body;
-                };
-                $('#historyArea').html(messagesString);
+                $scope.messages = messages;
+                $scope.$apply();
                 if (callback) {
                     callback(messages);
                 }

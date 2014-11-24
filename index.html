@@ -11,7 +11,14 @@
     <body ng-app="chatApp">
         <div id="chatContainer" ng-controller="ChatController as chat" ng-init="init()"> 
             <div id="chatStatusContainer">
-    			<textarea id="historyArea" readonly rows="10">LOADING...</textarea>
+                <div id="historyArea">
+                    <div ng-hide="messages">LOADING...</div>
+                    <div class="message" ng-repeat="message in messages">
+                        <span class="sender">{{message.sender}}:</span>
+                        <span class="body">{{message.body}}</span>
+                    </div>
+                </div>
+    			<!--textarea id="historyArea" readonly rows="10">LOADING...</textarea-->
                 <select multiple id="chatterList">
                     <option value="{{user}}" ng-repeat="user in users">{{user}}</option>
                 </select>

@@ -6,8 +6,6 @@ html, body {
 }
 
 body {
-	background-color: #000000;
-	color: #FFFFFF;
 }
 
 #chatContainer {
@@ -35,6 +33,8 @@ body {
 	width: auto;
 	display: block;
 	resize: none;
+	overflow-x: hidden; 
+	overflow-y: auto;
 }
 
 #chatterList {
@@ -55,4 +55,28 @@ body {
 
 #sendButton {
 	margin: 0;
+}
+
+.message {
+	display: flex;
+	flex-direction: row;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+.message .sender {
+	font-weight: bold;
+	padding-right: 5px;
+}
+
+.message .body {
+	flex: 1;
+}
+
+.message:nth-child(even) .body {
+	background-color: rgb(190, 245, 255);
+}
+
+.message:nth-child(odd) .body {
+	background-color: rgb(180, 180, 230);
 }
