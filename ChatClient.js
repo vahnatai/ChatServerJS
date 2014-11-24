@@ -1,7 +1,7 @@
 //(function() {
-    var chatApp = angular.module('chatApp', []);
+    var chatApp = angular.module('chatApp',[]);
 
-    chatApp.controller('ChatController', function($scope) {
+    var ChatController = chatApp.controller('ChatController', function($scope) {
         $scope.currentUser = null;
     	$scope.messages = [];
         $scope.users = [];
@@ -123,5 +123,19 @@
             setInterval($scope.refreshHistory, 250);
     	};
 
+    });
+
+    ChatController.directive('chatMessage', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                message: '='
+            },
+            templateUrl: 'directive.chatMessage.html',
+            link: function(scope, elem, attrs) {
+                console.log('scope:', scope);
+            }
+        };
     });
 //})();
